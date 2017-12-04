@@ -1,13 +1,16 @@
 package com.example.administrator.myhappysky.launch;
 
-import android.Manifest;
+import android.Manifest;;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.widget.Button;
 
-import com.example.administrator.myhappysky.R;
-import com.tbruyelle.rxpermissions.Permission;
+import com.example.administrator.myhappysky.MainActivity;
+
+import com.example.administrator.myhappysky.utils.JUtils;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import rx.functions.Action1;
@@ -15,36 +18,31 @@ import rx.functions.Action1;
 public class LaunchActivity extends AppCompatActivity {
 
     private final String TAG = "LaunchActivity";
+    private Button btn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
-        RxPermissions rxPermission = RxPermissions.getInstance(LaunchActivity.this);
-        rxPermission
-                .requestEach(Manifest.permission.ACCESS_FINE_LOCATION,
+        //setContentView(R.layout.activity_launcher);
+        //btn = (Button) findViewById(R.id.btn);
+        RxPermissions.getInstance(LaunchActivity.this)
+                .request(
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_CALENDAR,
-                        Manifest.permission.READ_CALL_LOG,
-                        Manifest.permission.READ_CONTACTS,
-                        Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.READ_SMS,
-                        Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.CALL_PHONE,
-                        Manifest.permission.SEND_SMS,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_NETWORK_STATE,
-                        Manifest.permission.WRITE_SETTINGS
-                )
-                .subscribe(new Action1<Permission>() {
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                .subscribe(new Action1<Boolean>() {
                     @Override
-                    public void call(Permission permission) {
-                        if (permission.granted) {
-                            Log.d(TAG, "Permission name:" + permission.name + "   right:" + permission.granted);
+                    public void call(Boolean aBoolean) {
+                        if (aBoolean) {//true表示获取权限成功（注意这里在android6.0以下默认为true）
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent i = new Intent(LaunchActivity.this, MainActivity.class);
+                                    startActivity(i);
+                                    finish();
+                                }
+                            }, 1500);
                         } else {
-                            Log.d(TAG, "Permission name:" + permission.name + "   right:" + permission.granted);
+                            JUtils.Toast("请开通SD卡读写权限");
                         }
                     }
                 });
