@@ -23,11 +23,8 @@
         android:id="@+id/imageView" / -->
 
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="美图秀"
+        android:text="百思不得姐"
         android:gravity="center_vertical"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:text="你的图片搜索神器" android:id="@+id/textView" />
 
 </LinearLayout>
