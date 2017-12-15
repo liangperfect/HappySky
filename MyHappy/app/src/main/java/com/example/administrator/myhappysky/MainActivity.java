@@ -1,15 +1,18 @@
 package com.example.administrator.myhappysky;
 
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewParent;
+import android.widget.Button;
 
-import com.example.administrator.myhappysky.utils.JUtils;
-
-import java.nio.Buffer;
+import com.example.administrator.myhappysky.widget.TabFragmentPagerAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,16 +23,27 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
+    @BindView(R.id.tab_layout)
+    TabLayout mLayout;
+    @BindView(R.id.viewPager)
+    ViewPager mViewPager;
+    TabFragmentPagerAdapter mFragmentPagerAdapter;
     final String TAG = "MainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.draw_layout);
-        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        init();
         initListener();
+    }
 
+    private void init() {
+        mFragmentPagerAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager(), MainActivity.this);
+        mViewPager.setAdapter(mFragmentPagerAdapter);
+
+        mLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
     }
 
@@ -83,20 +97,20 @@ public class MainActivity extends AppCompatActivity {
     private long exitTime;
 
     public void exit() {
-        boolean hasRated = JUtils.getSharedPreference().getBoolean("hasRated", false);
-        int count = JUtils.getSharedPreference().getInt("app_exit_count", 1);
-        if (!hasRated && (count == 5 || count % 10 == 0)) {
-            count++;
-            JUtils.getSharedPreference().edit().putInt("app_exit_count", count).commit();
-            //showRatingDialog();
-            return;
-        }
+        //boolean hasRated = JUtils.getSharedPreference().getBoolean("hasRated", false);
+        //int count = JUtils.getSharedPreference().getInt("app_exit_count", 1);
+        //if (!hasRated && (count == 5 || count % 10 == 0)) {
+        //  count++;
+        //JUtils.getSharedPreference().edit().putInt("app_exit_count", count).commit();
+        //showRatingDialog();
+        // return;
+        //}
         if ((System.currentTimeMillis() - exitTime) > 2000) {
-            JUtils.Toast("再按一次退出");
+            //JUtils.Toast("再按一次退出");
             exitTime = System.currentTimeMillis();
         } else {
-            count++;
-            JUtils.getSharedPreference().edit().putInt("app_exit_count", count).commit();
+            //count++;
+            //JUtils.getSharedPreference().edit().putInt("app_exit_count", count).commit();
             finish();
             //System.exit(0);
         }
